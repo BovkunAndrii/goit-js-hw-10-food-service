@@ -1,4 +1,4 @@
-import menuItemsTpl from './templates/menu-items-info.hbs';
+import menuItemsTpl from './templates/menu-items.hbs';
 import menuItemsInfo from './menu.json';
 import './css/styles.css';
 
@@ -13,36 +13,38 @@ function createMenuItemsMarkup(menuItemsInfo) {
 }
 
 // Тема
-const Theme = {
-    LIGHT: 'light-theme',
-    DARK: 'dark-theme',
-  };
-const themeCheckbox = document.querySelector('#theme-switch-toggle');
-themeCheckbox.addEventListener('change', onCheckboxStatusChange);
-const body = document.querySelector('body');
+const theme = {
+  LIGHT: 'light-theme',
+  DARK: 'dark-theme',
+};
 
-if (localStorage.getItem('theme') === null) {localStorage.setItem('theme', Theme.LIGHT);}
-body.classList = localStorage.getItem('theme');
-if (localStorage.getItem('theme') === Theme.DARK){ 
-    themeCheckbox.checked = true; 
-}
 
-function onCheckboxStatusChange() {
-    if (themeCheckbox.checked === true) {
-        
-        if (body.classList.contains(Theme.LIGHT)){
-            body.classList.remove(Theme.LIGHT);
-        }
-        body.classList.add(Theme.DARK);
-        themeCheckbox.setAttribute('checked', true);
-        localStorage.setItem('theme', body.classList);
-    }
-        
-    else {
-        if (body.classList.contains(Theme.DARK)){
-            body.classList.remove(Theme.DARK);
-        }
-        body.classList.add(Theme.LIGHT);
-        localStorage.setItem('theme', body.classList);
-    } 
-}
+const refs = {
+  body: document.querySelector('body'),
+  switcher: document.querySelector('#theme-switch-toggle'),
+};
+
+refs.switcher.addEventListener('change', switchBox);
+
+if (localStorage.getItem('theme')) {
+  refs.body.classList.add(localStorage.getItem('theme'));
+} else { 
+  refs.body.classList.add(theme.LIGHT);
+};
+
+refs.switcher.cheked = localStorage.getItem('theme') === theme.DARK;
+refs.switcher.checked = refs.body.classList.contains(theme.DARK)
+? true
+: false;
+
+function switchBox() {
+  if (this.checked) {
+    refs.body.classList.add(theme.DARK);
+    refs.body.classList.remove(theme.LIGHT);
+    localStorage.setItem('theme', theme.DARK);
+  } else {
+    refs.body.classList.add(theme.LIGHT);
+    refs.body.classList.remove(theme.DARK);
+    localStorage.setItem('theme', theme.LIGHT);
+  }
+};
